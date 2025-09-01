@@ -16,7 +16,7 @@ def signup(request):
             return redirect('home')
     else:
         form = SignUpForm()
-    return render(request, 'accounts/signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def login_view(request):
             return redirect('home')
         else:
             messages.error(request, 'Credenciais inválidas')
-    return render(request, 'accounts/login.html')
+    return render(request, 'login.html')
 
 def logout_view(request):
     logout(request)
@@ -36,7 +36,7 @@ def logout_view(request):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    return render(request, 'profile.html', {'user': request.user})
 
 def password_reset_by_question(request):
     if request.method == 'POST':
@@ -68,12 +68,12 @@ def password_reset_by_question(request):
             except CustomUser.DoesNotExist:
                 messages.error(request, 'Usuário não encontrado')
 
-    return render(request, 'accounts/password_reset.html', {'form': form, 'question': question})
+    return render(request, 'password_reset_form.html', {'form': form, 'question': question})
 
 @login_required
 def home(request):
     return render(request, 'home.html')
 
 class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'accounts/password_change.html'
+    template_name = 'password_change_form.html'
     success_url = reverse_lazy('profile')
