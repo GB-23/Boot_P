@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1>Bem-vindo ao Meu App teste para o projeto do sandeison!!</h1>
+    <p>Você está logado como {{ user.username }}.</p>
+    <a href="{% url 'profile' %}" class="btn btn-primary">Ver Perfil</a>
+    <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+</div>
+{% endblock %}
