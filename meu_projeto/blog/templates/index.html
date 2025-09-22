@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Lista de Pessoas e Endereços</h1>
+  <ul>
+    {% for pessoa in pessoas %}
+      <li>
+        <strong>{{ pessoa.nome }}</strong>
+        (usuário: {{ pessoa.usuario.username }})
+        <ul>
+          {% for end in pessoa.enderecos.all %}
+            <li>
+              {{ end.rua }}, {{ end.numero }} – {{ end.bairro }},
+              {{ end.cidade }}/{{ end.estado }} – CEP {{ end.cep }}
+            </li>
+          {% empty %}
+            <li>Sem endereço cadastrado</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% empty %}
+      <li>Nenhuma pessoa cadastrada.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
