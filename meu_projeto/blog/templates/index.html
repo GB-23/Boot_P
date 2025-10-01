@@ -1,25 +1,71 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h1>Lista de Pessoas e Endereços</h1>
-  <ul>
-    {% for pessoa in pessoas %}
-      <li>
-        <strong>{{ pessoa.nome }}</strong>
-        (usuário: {{ pessoa.usuario.username }})
-        <ul>
-          {% for end in pessoa.enderecos.all %}
-            <li>
+<div id="enderecosApp" v-cloak>
+  <h1 class="mb-4 text-light">Lista de Pessoas e Endereços</h1>
+
+  <div class="glass-card p-4 rounded shadow">
+    <ul class="list-unstyled text-light">
+      <li v-for="pessoa in pessoas" :key="pessoa.id" class="mb-3">
+        <strong @click="toggle(pessoa.id)" style="cursor:pointer;">
+          {{ pessoa.nome }}
+          <small class="text-info">(usuário: {{ pessoa.usuario }})</small>
+          <span v-if="openId === pessoa.id">▲</span>
+          <span v-else>▼</span>
+        </strong>
+
+        <transition name="fade">
+          <ul v-show="openId === pessoa.id" class="ms-3 mt-2">
+            <li v-for="end in pessoa.enderecos" :key="end.id">
               {{ end.rua }}, {{ end.numero }} – {{ end.bairro }},
               {{ end.cidade }}/{{ end.estado }} – CEP {{ end.cep }}
             </li>
-          {% empty %}
-            <li>Sem endereço cadastrado</li>
-          {% endfor %}
-        </ul>
+            <li v-if="pessoa.enderecos.length === 0"><em>Sem endereço cadastrado</em></li>
+          </ul>
+        </transition>
       </li>
-    {% empty %}
-      <li>Nenhuma pessoa cadastrada.</li>
-    {% endfor %}
-  </ul>
+
+      <li v-if="pessoas.length === 0"><em>Nenhuma pessoa cadastrada.</em></li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ddd;
+  }
+
+  strong:hover {
+    color: #89b4fa;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+  }
+
+  [v-cloak] { display:none; }
+</style>
+
+<script>
+const { createApp } = Vue;
+createApp({
+  data() {
+    return {
+      openId: null,
+      pessoas: JSON.parse('{{ pessoas_json|escapejs }}')
+    }
+  },
+  methods: {
+    toggle(id) {
+      this.openId = this.openId === id ? null : id;
+    }
+  }
+}).mount('#enderecosApp');
+</script>
 {% endblock %}

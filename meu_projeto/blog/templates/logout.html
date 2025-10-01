@@ -1,7 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container mt-5 text-center">
-    <h2>Você saiu da conta</h2>
-    <a href="/" class="btn btn-secondary mt-3">Voltar para Home</a>
+<div id="logoutApp" class="d-flex justify-content-center mt-5" v-cloak>
+  <transition name="fade" appear>
+    <div class="glass-card p-5 shadow-sm text-center" style="max-width: 400px; width: 100%;">
+      <h2 class="mb-4 text-light">Você saiu da conta</h2>
+      <a href="/" class="btn btn-secondary btn-modern">Voltar para Home</a>
+    </div>
+  </transition>
 </div>
+
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-modern {
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn-modern:hover {
+    box-shadow: 0 0 12px #6c757daa;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.8s ease;
+  }
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+  }
+  [v-cloak] { display:none; }
+</style>
+
+<script>
+const { createApp } = Vue;
+createApp({}).mount('#logoutApp');
+</script>
 {% endblock %}

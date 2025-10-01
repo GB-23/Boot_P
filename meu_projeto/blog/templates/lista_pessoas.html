@@ -1,19 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Lista de Pessoas</h1>
-<table>
-  <tr>
-    <th>Nome</th><th>CPF</th><th>E-mail</th><th>Telefone</th>
-  </tr>
-  {% for p in pessoas %}
-  <tr>
-    <td>{{ p.nome }}</td>
-    <td>{{ p.cpf }}</td>
-    <td>{{ p.email }}</td>
-    <td>{{ p.telefone }}</td>
-  </tr>
-  {% empty %}
-  <tr><td colspan="4">Nenhuma pessoa cadastrada.</td></tr>
-  {% endfor %}
-</table>
+<div id="listaPessoasApp" class="mb-4" v-cloak>
+  <h1 class="mb-4 text-light">Lista de Pessoas</h1>
+
+  <input type="text" v-model="search" placeholder="Buscar por nome..." class="form-control mb-3" style="max-width: 300px;">
+
+  <div class="table-responsive">
+    <table class="table table-dark table-striped table-hover rounded shadow glass-card">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="p in filteredPessoas" :key="p.id">
+          <td>{{ p.nome }}</td>
+          <td>{{ p.cpf }}</td>
+          <td>{{ p.email }}</td>
+          <td>{{ p.telefone }}</td>
+        </tr>
+        <tr v-if="filteredPessoas.length === 0">
+          <td colspan="4" class="text-center">Nenhuma pessoa cadastrada.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  tbody tr:hover {
+    background-color: rgba(137, 180, 250, 0.2);
+    cursor: default;
+  }
+  [v-cloak] { display:none; }
+</style>
+
+<script>
+const { createApp } = Vue;
+createApp({
+  data() {
+    return {
+      search: '',
+      pessoas: JSON.parse('{{ pessoas_json|escapejs }}')
+    }
+  },
+  computed: {
+    filteredPessoas() {
+      const s = this.search.toLowerCase();
+      return this.pessoas.filter(p => p.nome.toLowerCase().includes(s));
+    }
+  }
+}).mount('#listaPessoasApp');
+
+</script>
 {% endblock %}

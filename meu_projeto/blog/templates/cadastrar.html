@@ -2,20 +2,28 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Cadastrar</h2>
-    <form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
         <div class="mb-3">
-            <label>Nome</label>
-            <input type="text" class="form-control">
+            <label>Nome de usuário</label>
+            <input type="text" name="username" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Email</label>
-            <input type="email" class="form-control">
+            <input type="email" name="email" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Senha</label>
-            <input type="password" class="form-control">
+            <input type="password" name="password" class="form-control" required>
         </div>
-        <button class="btn btn-primary">Cadastrar</button>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
     </form>
 </div>
 {% endblock %}

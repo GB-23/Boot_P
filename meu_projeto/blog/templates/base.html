@@ -1,25 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{% block title %}{% endblock %}</title>
+  <title>{% block title %}My App{% endblock %}</title>
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #12121b);
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav.navbar {
+      background: rgba(20, 30, 50, 0.7);
+      backdrop-filter: saturate(180%) blur(10px);
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.5);
+    }
+
+    nav.navbar .navbar-brand,
+    nav.navbar .nav-link {
+      color: #cdd6f4;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    nav.navbar .nav-link:hover,
+    nav.navbar .nav-link.active {
+      color: #89b4fa;
+      text-shadow: 0 0 6px #89b4faaa;
+    }
+
+    .btn-outline-light {
+      border-radius: 50px;
+      border-color: #89b4fa;
+      color: #89b4fa;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px transparent;
+    }
+    .btn-outline-light:hover {
+      background: #89b4fa22;
+      color: #89b4fa;
+      box-shadow: 0 0 12px #89b4faaa;
+    }
+
+    .btn-light {
+      background: #89b4fa44;
+      color: #12121b;
+      border-radius: 50px;
+      border: none;
+      transition: background 0.3s ease;
+    }
+    .btn-light:hover {
+      background: #89b4fa88;
+      color: #12121b;
+    }
+
+    #app > .container {
+      padding-top: 1rem;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-  <ul class="nav bg-info">
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/">HOME</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/members">MEMBERS</a>
-    </li>
-  </ul>
-
-  {% block content %}
-  {% endblock %}
+{% if messages %}
+<div class="container mt-3">
+  <div class="alert alert-info bg-info bg-opacity-10 text-info border border-info rounded-3">
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  </div>
 </div>
+{% endif %}
+
+<div id="app" class="container-fluid p-0">
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">My App</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/lista-pessoas' %}active{% endif %}" href="/lista-pessoas">Members</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/index' %}active{% endif %}" href="/index">Addresses</a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="text-light me-3">Olá, {{ user.username }}!</span>
+          <form method="post" action="{% url 'logout' %}" @submit.prevent="confirmLogout" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Login</a>
+          <a href="{% url 'cadastrar' %}" class="btn btn-light btn-sm">Cadastrar</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+</div>
+
+<script>
+const { createApp } = Vue
+
+createApp({
+  methods: {
+    confirmLogout(e) {
+      if (confirm("Tem certeza de que deseja sair?")) {
+        e.target.submit(); 
+      }
+    }
+  }
+}).mount('#app')
+</script>
+
 </body>
 </html>
