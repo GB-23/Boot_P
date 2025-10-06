@@ -194,8 +194,6 @@ def perfil(request):
 def home(request):
     try:
         pessoa = Pessoa.objects.get(usuario=request.user)
-        if pessoa.tipo != 'comum':
-            return redirect('home')  
     except Pessoa.DoesNotExist:
         return redirect('login')
     
