@@ -11,4 +11,6 @@ urlpatterns = [
     path('perfil/', views.perfil, name='perfil'),
     path('lista-pessoas/', views.lista_pessoas, name='lista_pessoas'),
     path('index/', views.lista_endereco, name='index'),
+    path('homeadmin/', views.homeadmin, name='homeadmin'),
+    path('homemanager/', views.homemanager, name='homemanager'),
 ]

@@ -1,10 +1,41 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<div class="container mt-5">
-    <h2>Perfil do Usuário</h2>
-    <ul class="list-group">
-        <li class="list-group-item">Nome: Gabriel</li>
-        <li class="list-group-item">Email: exemplo@email.com</li>
-    </ul>
+<pre>{{ pessoa_json }}</pre>
+<div class="glass-card p-4 rounded shadow text-light">
+  <h1 class="mb-4">Perfil do Usuário</h1>
+
+  <ul class="list-unstyled">
+    <li><strong>Nome:</strong> {{ pessoa.nome }}</li>
+    <li><strong>Usuário:</strong> {{ pessoa.usuario.username }}</li>
+    <li><strong>CPF:</strong> {{ pessoa.cpf }}</li>
+    <li><strong>RG:</strong> {{ pessoa.rg }}</li>
+    <li><strong>Email:</strong> {{ pessoa.email }}</li>
+    <li><strong>Telefone:</strong> {{ pessoa.telefone }}</li>
+    <li><strong>Data de Nascimento:</strong> {{ pessoa.data_nascimento|date:"d/m/Y" }}</li>
+  </ul>
+
+  <hr class="text-light">
+
+  <h4 class="mt-4">Endereços</h4>
+  <ul class="list-unstyled">
+    {% for end in enderecos %}
+      <li>
+        {{ end.rua }}, {{ end.numero }} – {{ end.bairro }},
+        {{ end.cidade }}/{{ end.estado }} – CEP {{ end.cep }}
+      </li>
+    {% empty %}
+      <li><em>Sem endereço cadastrado</em></li>
+    {% endfor %}
+  </ul>
 </div>
+
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ddd;
+  }
+</style>
 {% endblock %}
